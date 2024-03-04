@@ -23,10 +23,6 @@ dokku apps:create miniflux
 # Keep the Postgres DSN output for the Miniflux configuration settings later
 dokku postgres:create miniflux
 dokku postgres:link miniflux miniflux
-
-# Get latest Miniflux image and create Docker tag
-docker image pull miniflux/miniflux:latest
-docker image tag miniflux/miniflux:latest dokku/miniflux:latest
 ```
 
 ### Configure Dokku application settings
@@ -45,13 +41,13 @@ dokku config:set miniflux ADMIN_PASSWORD=<SET_YOUR_USERNAME>
 ### Configure Dokku port settings
 
 ```
-dokku proxy:ports-set miniflux http:80:8080
+dokku ports:set miniflux http:80:8080
 ```
 
 ### Deploy
 
 ```
-dokku tags:deploy miniflux latest
+dokku git:from-image miniflux miniflux/miniflux:latest
 ```
 
 You should be now able to open your Miniflux app via: http://miniflux.example.com (check dokku output).  
@@ -60,7 +56,7 @@ If it didn't succeed, check `dokku logs miniflux`.
 ### Configure letsencrypt
 
 ```
-dokku letsencrypt miniflux
+dokku letsencrypt:enable miniflux
 ```
 
 Now Miniflux should be reachable via https://miniflux.example.com. If that's not the case, 
